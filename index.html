@@ -68,23 +68,48 @@
 		}
 		</style>
     </head>
+
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="ly9yrt03vretujv">
+    </script>
+
     <body>
     	 <div id = "tweetbox">
     	 	<h2>Tweet here!</h2>
     	 	<textarea name="tweet" id = "tweet"></textarea> 
     	 	<button type="button" id='map_button' >Map</button>
+    	 	<input type="dropbox-chooser" name="selected-file" style="visibility: hidden;"/>
     	 </div>
 
 <!--     	 <div id = "copybox">
     	 	<textarea id = "copy"></textarea> 
     	 </div> -->
 
+
     <script type="text/javascript">
 		$(document).ready(function () {
 	       $('#tweet').keyup(function () {
 				var tweet_text = $('#tweet').val();
+				//search for special keys
+				// 1. map (`!)
 				if (tweet_text.match(/`\!([^ ]*)/)) {
 					var special_key_map = tweet_text.match(/`\!([^ ]*)/)[1];	
+
+				}
+
+				// 2. dropbox - upload (`^)
+				if (tweet_text.match(/`\^([^ ]*)/)) {
+					var special_key_map = tweet_text.match(/`\^([^ ]*)/)[1];
+					var options = {
+            			// Required. Called when a user selects an item in the Chooser.
+            			success: function(files) {
+                		alert("Here's the file link:" + files[0].link)
+            		}
+            }	
+					Dropbox.choose(options.success);
+
+					// 1. upload photos
+
+					// 2. upload docs
 				}
 	        });
 	       $('#map_button').click(function () {
@@ -92,6 +117,6 @@
 	       });
 		});
     </script>
-
+    
     </body>
 </html>
