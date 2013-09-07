@@ -80,6 +80,11 @@
     	 </div> -->
 
     <script type="text/javascript">
+    function HandleMapResult(lat,lng) {
+		    alert("location: " + lat + ", " +lng );
+		}
+
+
 		$(document).ready(function () {
 	       $('#tweet').keyup(function () {
 				var tweet_text = $('#tweet').val();
@@ -87,8 +92,8 @@
 					var special_key_map = tweet_text.match(/`\!([^ ]*)/)[1];	
 				}
 	        });
-	       $('#map_button').click(function () {
-	       		
+	       $('#map_button').click(function () {	
+	       		window.open('./map/map.html','targetWindow','location=0,menubar=0,status=0,scrollbars=0,width=400,height=400')
 	       });
 		});
     </script>
