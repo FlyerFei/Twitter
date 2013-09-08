@@ -76,20 +76,27 @@
     </script>
 
     <body>
+    <form name="twitter_form" action="">
     <div id = "tweetbox">
       <h2>Tweet here!</h2>
-    	 	<textarea maxlength="140" name="tweet" id = "tweet"></textarea> 	
- 	  <img src='./resources/location1.png' class='normal_button' id='map_button'>
+    	 	<textarea maxlength="140" name="tweet" id = "tweet"></textarea>
+    	 	<textarea name='latitude' style="display:none"></textarea>
+    	 	<textarea name='longitude' style="display:none"></textarea>
+	 		<img src='./resources/location1.png' class='normal_button' id='map_button'>
 
     	 	<div class='normal_button' style='left:50px'>
     	 		<input type="dropbox-chooser" data-extensions=".png .jpg .gif" name="selected-file" id="db-chooser"/>
     	 	</div>
-    	 </div>
+    	 	<input type="submit" name="submit" class="button" id="submit_btn" value="Tweet it!" /> 
+    </div>
+    </form>
     
     
 <script type="text/javascript">
     var query_search;
     var special_key_map;
+    var latitude = '';
+    var longitude = '';
 
     chooser_options = {
         // Required. Called when a user selects an item in the Chooser.
@@ -104,12 +111,15 @@
     };
 
      function HandleMapResult(lat,lng) {
-	    alert("location: " + lat + ", " +lng );
+	    latitude = lat;
+	    longitude = lng;
 	}
 	function HandleSearchResult(searchResult, lat,lng) {
 	    var str = $('#tweet').val();
 	    str = str.replace ('`!'+special_key_map+' ', '#'+searchResult);
 	    $('#tweet').val(str);
+	    latitude = lat;
+	    longitude = lng;
 	}
 
 		$(document).ready(function () {
@@ -130,6 +140,25 @@
 	        });
 	       $('#map_button').click(function () {	
 	       		window.open('./map/map.html','targetWindow','location=0,menubar=0,status=0,scrollbars=0,width=400,height=400')
+	       });
+
+	       $('#submit_btn').click(function () {
+	       		var tweet_message = $('#tweet').val();
+	       		if (tweet_message == "") {
+	       			alert ("Please enter your message in the textarea!");
+	       			return false;
+	       		}
+
+	       		var dataString = 'tweet='+tweet_message + '&latitude='+latitude + '&longitude='+longitude;
+	       		$.ajax({
+	       			type: "POST",
+	       			url: "post_tweet.php",
+	       			data: dataString,
+	       			success: function() {
+	       				$('#tweet').val("");
+	       			}
+	       		});
+	       		return false;
 	       });
 		});
     </script>
