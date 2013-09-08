@@ -61,28 +61,33 @@
 		}
 
 		body {
-			background-color: pink;
+			background-image:url('IMG_3449.jpg');
+			background-color: white;
+			background-size: cover;
 			font-family: impact;
 		}
-		</style>
+		#tweetbox h2 {
+	color: #FFF;
+}
+        </style>
     </head>
-
+    
     <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="ng05wv2uvviksqo"></script>
     </script>
 
     <body>
-    	 <div id = "tweetbox">
-    	 	<h2>Tweet here!</h2>
+    <div id = "tweetbox">
+      <h2>Tweet here!</h2>
     	 	<textarea maxlength="140" name="tweet" id = "tweet"></textarea> 	
-    	 	<img src='./resources/location1.png' class='normal_button' id='map_button'>
+ 	  <img src='./resources/location1.png' class='normal_button' id='map_button'>
 
     	 	<div class='normal_button' style='left:50px'>
     	 		<input type="dropbox-chooser" data-extensions=".png .jpg .gif" name="selected-file" id="db-chooser"/>
     	 	</div>
     	 </div>
-
-
-    <script type="text/javascript">
+    
+    
+<script type="text/javascript">
     var query_search;
     var special_key_map;
 
