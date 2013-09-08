@@ -20,6 +20,7 @@
         	/*top: 50%;*/
 			/*left: 1%;*/
 		    left: 300px;
+		    height: 20px;
         }
 
         #submit_btn:active {
@@ -104,13 +105,20 @@
         // Required. Called when a user selects an item in the Chooser.
         success: function(files) {
 			var str = $('#tweet').val();
-		    str = str.replace ('`^', files[0].link);
+	    	str = str.replace ('`^', files[0].link);
 		    $('#tweet').val(str);
         },
         linkType: "preview",
         multiselect: false,
         extensions: ['.png', '.jpg', '.gif'],
     };
+
+    document.getElementById("db-chooser").addEventListener("DbxChooserSuccess",
+        function(e) {
+        	var str = $('#tweet').val();
+	    	str = str+e.files[0].link;
+		    $('#tweet').val(str);
+        }, false);
 
      function HandleMapResult(lat,lng) {
 	    latitude = lat;
