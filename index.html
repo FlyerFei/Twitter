@@ -54,13 +54,11 @@
 		    -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;  
 		    } 
 
-		#map_button {
+		.normal_button {
 			position: absolute;
     		bottom: 0;
 		    left: 0;
 		}
-
-  
 
 		body {
 			background-color: pink;
@@ -69,24 +67,40 @@
 		</style>
     </head>
 
-    <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="ly9yrt03vretujv">
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="ng05wv2uvviksqo"></script>
     </script>
 
     <body>
     	 <div id = "tweetbox">
     	 	<h2>Tweet here!</h2>
-    	 	<textarea maxlength="140" name="tweet" id = "tweet"></textarea> 
-    	 	<button type="button" id='map_button' >Map</button>
-    	 	<input type="dropbox-chooser" name="selected-file" style="visibility: hidden;"/>
+    	 	<textarea maxlength="140" name="tweet" id = "tweet"></textarea> 	
+    	 	<img src='./resources/location1.png' class='normal_button' id='map_button'>
+
+    	 	<div class='normal_button' style='left:50px'>
+    	 		<input type="dropbox-chooser" data-extensions=".png .jpg .gif" name="selected-file" id="db-chooser"/>
+    	 	</div>
     	 </div>
 
 
     <script type="text/javascript">
     var query_search;
     var special_key_map;
+
+    chooser_options = {
+        // Required. Called when a user selects an item in the Chooser.
+        success: function(files) {
+			var str = $('#tweet').val();
+		    str = str.replace ('`^', files[0].link);
+		    $('#tweet').val(str);
+        },
+        linkType: "preview",
+        multiselect: false,
+        extensions: ['.png', '.jpg', '.gif'],
+    };
+
      function HandleMapResult(lat,lng) {
-			    alert("location: " + lat + ", " +lng );
-			}
+	    alert("location: " + lat + ", " +lng );
+	}
 	function HandleSearchResult(searchResult, lat,lng) {
 	    var str = $('#tweet').val();
 	    str = str.replace ('`!'+special_key_map+' ', '#'+searchResult);
@@ -106,18 +120,7 @@
 
 				// 2. dropbox - upload (`^)
 				if (tweet_text.match(/`\^([^ ]*)/)) {
-					var special_key_upload = tweet_text.match(/`\^([^ ]*)/)[1];
-					var options = {
-            			// Required. Called when a user selects an item in the Chooser.
-            			success: function(files) {
-                		alert("Here's the file link:" + files[0].link)
-            			}
-            		}	
-					Dropbox.choose(options.success);
-
-					// 1. upload photos
-
-					// 2. upload docs
+					Dropbox.choose(chooser_options);
 				}
 	        });
 	       $('#map_button').click(function () {	
