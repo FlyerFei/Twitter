@@ -33,19 +33,16 @@
 		    outline: 0;  
 		    font: normal 13px/100% Verdana, Tahoma, sans-serif;  
 		    width: 200px;  
+		    height:80px;  
 
 		    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #EEEEEE), to(#FFFFFF));  
 		    background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);  
 		    box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
 		    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
 		    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;  
-	    }  
 
-	    textarea {   
-		    width: 400px;  
-		    max-width: 400px;  
-		    height: 150px;  
-		    line-height: 150%;  
+		    resize: none;
+			overflow: auto;
 	    }  
   
 		input:hover, textarea:hover,  
@@ -68,6 +65,9 @@
 		}
 		#tweetbox h2 {
 	color: #FFF;
+	font-family: "Comic Sans MS", cursive;
+	font-weight: bold;
+	font-size: 36px;
 }
         </style>
     </head>
@@ -82,9 +82,9 @@
     	 	<textarea maxlength="140" name="tweet" id = "tweet"></textarea>
     	 	<textarea name='latitude' style="display:none"></textarea>
     	 	<textarea name='longitude' style="display:none"></textarea>
-	 		<img src='./resources/location1.png' class='normal_button' id='map_button'>
+	 		<img src='./resources/gmap.jpg' class='normal_button' id='map_button'>
 
-    	 	<div class='normal_button' style='left:50px'>
+    	 	<div class='normal_button' style='left:120px'>
     	 		<input type="dropbox-chooser" data-extensions=".png .jpg .gif" name="selected-file" id="db-chooser"/>
     	 	</div>
     	 	<input type="submit" name="submit" class="button" id="submit_btn" value="Tweet it!" /> 
