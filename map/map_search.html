@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        height: 95%;
+        margin: 0px;
+        padding: 0px;
+        background-color:#FFFFFF;
+      }
+      #map_canvas {
+        height: 100%
+      }
+    </style>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
+    <script src="../js/geoPosition.js"></script>
+    <script type="text/javascript">
+    var query_search = window.opener.query_search;
+    var map, latLng, marker, searchResult;
+    var geocoder = new google.maps.Geocoder();
+    var marker = new Array();
+
+      function initialize() {
+        // Try HTML5 geolocation
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var myOptions = {
+            center: latLng,
+            zoom: 14,
+            disableDoubleClickZoom: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var search = {
+              location: latLng,
+              radius: '500',
+              query: query_search
+            };
+
+            map = new google.maps.Map(document.getElementById("map_canvas"),  myOptions);
+           document.getElementById('info').innerHTML = [
+            latLng.lat().toFixed(5),
+            latLng.lng().toFixed(5)
+            ].join(', ');
+
+            service = new google.maps.places.PlacesService(map);
+            service.textSearch(search, callback);
+
+              // geocodePosition(latLng);
+              // // Add double click event listener.
+              // addDoubleClickListener();
+              // // Add dragging event listeners.
+              // addMarkerListener();
+            });
+        }
+        else {
+          latLng = new google.maps.LatLng(0,0);
+          var myOptions = {
+            center: latLng,
+            zoom: 0,
+            disableDoubleClickZoom: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+          map = new google.maps.Map(document.getElementById("map_canvas"),
+              myOptions);
+          document.getElementById('info').innerHTML = 'Click "Add Location" to enable the map';
+          document.getElementById('address').innerHTML = 'Cannot determine address at this location.';
+          
+          marker = new google.maps.Marker({
+                position: latLng,
+                title: 'Here I am!',
+                map: map,
+                draggable : true
+                });
+          // Add double click event listener.
+          addDoubleClickListener();
+          // Add dragging event listeners.
+          addMarkerListener();
+        }
+      }
+
+      function callback(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            var place = results[i];
+            // alert (place.geometry.location);
+            marker[i] = new google.maps.Marker({
+                    position: place.geometry.location,
+                    title: place.name,
+                    map: map,
+                    draggable : false
+                    });
+            
+            addMarkerListener(marker[i], place.name);
+          }
+        }
+      }
+
+      function geocodePosition(pos) {
+    	  geocoder.geocode({
+    	    latLng: pos
+    	  }, function(responses) {
+    	    if (responses && responses.length > 0) {
+    	      updateMarkerAddress(responses[0].formatted_address);
+    	    } else {
+    	      updateMarkerAddress('Cannot determine address at this location.');
+    	    }
+    	  });
+    	}
+      
+    	function updateMarkerPosition(latLng) {
+    	  document.getElementById('info').innerHTML = [
+    	    latLng.lat().toFixed(5),
+    	    latLng.lng().toFixed(5)
+    	  ].join(', ');
+    	}
+
+      function updateMarkerAddress(str) {
+        document.getElementById('address').innerHTML = str;
+      }
+      
+    	function addMarkerListener(marker, name) {
+          searchResult = name;  	  
+  	  	  // Add dragging event listeners.
+  	  	  google.maps.event.addListener(marker, 'click', function() {
+  	  	    geocodePosition(marker.getPosition());
+  	  	  });
+    	}
+    	
+    	function addDoubleClickListener() {
+    		google.maps.event.addListener(map, 'dblclick', function(event) {
+          	  marker.setMap(null);
+      		  marker = new google.maps.Marker({
+                    position: event.latLng,
+                    title: 'Here I am!',
+                    map: map,
+                    draggable : true
+                    });
+      		  // Update current position info.
+        	  	  updateMarkerPosition(event.latLng);
+        	  	  geocodePosition(event.latLng);
+        		  // Add dragging event listeners.
+        	  	  addMarkerListener();
+      	  });
+    	}
+      function codeAddress(address) {
+    	  geocoder = new google.maps.Geocoder();
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              var myOptions = {
+              zoom: 15,
+              center: results[0].geometry.location,
+              disableDoubleClickZoom: true,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+              }
+              latLng = results[0].geometry.location
+              map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+              marker = new google.maps.Marker({
+              position: latLng,
+              title: 'Here I am!',
+              map: map,
+              draggable : true
+              });
+        	  // Update current position info.
+      	  	  updateMarkerPosition(latLng);
+      	  	  geocodePosition(latLng);
+        	     // Add double click event listener.
+        	     addDoubleClickListener();
+      		    // Add dragging event listeners.
+      	  	  addMarkerListener();
+            }
+          });
+
+        }
+
+    $(document).ready(function () {
+       $('#confirm_location').click(function () { 
+          window.opener.HandleSearchResult( searchResult, latLng.lat().toFixed(5), latLng.lng().toFixed(5)  );
+          window.close();
+       });
+    });
+
+
+    </script>
+    
+  </head>
+  <body onload="initialize()" bgcolor="rgb(245,245,245)">
+    <div id="map_canvas" style="width:100%; height:75%"></div>
+  	<div id="infoPanel">
+  	<font size="2">
+    <div id="info"></div>
+    <b>Closest Matching Address:</b>
+    <div id="address"></div>
+    <button type="button" id='confirm_location'>Tag me!</button>
+    </font>
+  </div>
+  </body>
+</html>

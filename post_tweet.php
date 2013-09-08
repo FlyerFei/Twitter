@@ -18,7 +18,7 @@
 			$nb_of_tweets = 1;
 			$include_rts = false;
 
-            $tweet_content = 'Hello PennApps!!';
+            $tweet_content = 'Hello PennApps!! #Hackathon';
 			
 			$connection = new TwitterOAuth($consumer_key,$consumer_secret,$access_token,$access_token_secret);
                   
